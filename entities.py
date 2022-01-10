@@ -47,7 +47,7 @@ class Entity:
 
 
 class DirLight():
-    def __init__(self, shader: Shader, direction: list, ambient: float, diffuse: float, specular: float):
+    def __init__(self, shader: Shader, direction: list, ambient: list, diffuse: list, specular: list):
         self.shader = shader
         self.direction = glm.vec3(*direction)
         self.ambient = ambient
@@ -66,8 +66,8 @@ class DirLight():
 import numpy as np
 class PointLight(Entity):
     CONSTANT = 1.0
-    LINEAR = 0.09
-    QUADRATIC = 0.032
+    LINEAR = 0.00
+    QUADRATIC = 0.00
     
     def __init__(self, shaders: list[Shader], color: list, position: list, index: int):
         super().__init__(ColoredCube(*color, shaders[0]), position, [0, 0, 0], 0.2)

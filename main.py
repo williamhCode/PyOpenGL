@@ -1,4 +1,3 @@
-from OpenGL.GLU import projection
 import pygame
 from pygame.locals import *
 
@@ -14,7 +13,6 @@ from material import *
 from camera import *
 from shader import *
 from entities import *
-
 
 def main():
     # initialize -------------------------------------------------- #
@@ -67,11 +65,11 @@ def main():
         PointLight([shaderBasic, shader], [0.0, 0.0, 2.0], [-1.0, 1.0, 1.0], 2),
     ]
     
-    static_entities: list[Entity] = [backpack]
-    dynamic_entites: list[Entity] = []
+    static_entities: list[Entity] = []
+    dynamic_entites: list[Entity] = [backpack]
     
     camera = FPS_Camera([0.0, 0.0, 5.0], [0.0, 0.0, 0.0], glm.radians(45.0), display[0]/display[1], 0.3, 30.0)
-
+    
     # game loop -------------------------------------------------- #
     clock = Timer()
 
@@ -133,6 +131,8 @@ def main():
         camera.update([shader, shaderBasic])
         
         dir_light.update()
+        
+        # backpack.orientation.y += 50 * dt
         
         for point_light in point_lights:
             point_light.update()
