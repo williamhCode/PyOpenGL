@@ -81,7 +81,7 @@ class Triangle:
         glBindVertexArray(self.vao)
         glDrawArrays(GL_TRIANGLES, 0, self.vertex_count)
         
-
+        
 class OBJModel(TexturedModel):
     
     def __init__(self, filename, material: Material, shader: Shader):
@@ -328,3 +328,45 @@ class ColoredCube(Model):
 
         glEnableVertexAttribArray(1)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(12))
+
+
+class TexturedQuad:
+    
+    def __init__(self, x, y, w, h, texture, shader):
+        self.shader = shader
+        self.texture = texture
+        self.vertices = (
+            x - w/2, y + h/2, 0, 1,
+            x - w/2, y - h/2, 0, 0,
+            x + w/2, y - h/2, 1, 0,
+
+            x - w/2, y + h/2, 0, 1,
+            x + w/2, y - h/2, 1, 0,
+            x + w/2, y + h/2, 1, 1
+        )
+        self.vertices = np.array(self.vertices, dtype=np.float32)
+        
+        self.vao = glGenVertexArrays(1)
+        glBindVertexArray(self.vao)
+        self.vbo = glGenBuffers(1)
+        glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
+        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices, GL_STATIC_DRAW)
+
+        glEnableVertexAttribArray(0)
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 16, ctypes.c_void_p(0))
+
+        glEnableVertexAttribArray(1)
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 16, ctypes.c_void_p(8))
+    
+    def draw(self):
+        glUseProgram(self.shader)
+        
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, self.texture)
+        
+        glBindVertexArray(self.vao)
+        glDrawArrays(GL_TRIANGLES, 0, 6)
+    
+    def destroy(self):
+        glDeleteVertexArrays(1, (self.vao,))
+        glDeleteBuffers(1, (self.vbo,))
