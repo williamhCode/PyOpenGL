@@ -359,7 +359,7 @@ class TexturedQuad:
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 16, ctypes.c_void_p(8))
     
     def draw(self):
-        glUseProgram(self.shader)
+        self.shader.use()
         
         glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.texture)

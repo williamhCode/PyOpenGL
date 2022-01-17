@@ -13,6 +13,7 @@ from material import *
 from camera import *
 from shader import *
 from entities import *
+from post_processing import *
 
 def main():
     # initialize -------------------------------------------------- #
@@ -48,6 +49,11 @@ def main():
     shader.setFloat("material.shininess", 32.0)
     
     shaderBasic = Shader("shaders/simple_3d_vertex.vert", "shaders/simple_3d_fragment.frag")
+    
+    shader2d = Shader("shaders/screen_vertex.vert", "shaders/screen_fragment.frag")
+    
+    # post processing
+    post_processing = PostProcessing(display, shader2d)
 
     # objects
     backpack_model = OBJModel("models/backpack.obj", Material("img/diffuse.jpg", "img/specular.jpg"), shader)
@@ -132,7 +138,7 @@ def main():
         
         dir_light.update()
         
-        # backpack.orientation.y += 50 * dt
+        backpack.orientation.y += 50 * dt
         
         for point_light in point_lights:
             point_light.update()
@@ -144,7 +150,8 @@ def main():
             entity.update_transform()
 
         # drawing
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        post_processing.begin()
 
         glDisable(GL_CULL_FACE)
         for point_light in point_lights:
@@ -156,6 +163,8 @@ def main():
         
         for entity in static_entities:
             entity.draw()
+
+        post_processing.end()
 
         # flip screen
         pygame.display.flip()
