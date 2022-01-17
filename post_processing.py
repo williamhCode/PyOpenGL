@@ -5,7 +5,7 @@ from models import TexturedQuad
 
 class PostProcessing:
     
-    def __init__(self, display: tuple, shader) -> None:
+    def __init__(self, display: tuple, shader):
         self.shader = shader
         
         self.fbo = glGenFramebuffers(1)
