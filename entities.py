@@ -30,7 +30,7 @@ class Entity:
         
         scale_transformation = glm.scale(glm.vec3(self.scale, self.scale, self.scale))
 
-        transformation_matrix = rotation_transformation @ position_transformation @ scale_transformation
+        transformation_matrix = position_transformation @ rotation_transformation @ scale_transformation
         return transformation_matrix
     
     def update(self):
@@ -50,18 +50,19 @@ class DirLight():
     def __init__(self, shader: Shader, direction: list, ambient: list, diffuse: list, specular: list):
         self.shader = shader
         self.direction = glm.vec3(*direction)
-        self.ambient = ambient
-        self.diffuse = diffuse
-        self.specular = specular
+        self.ambient = glm.vec3(ambient)
+        self.diffuse = glm.vec3(diffuse)
+        self.specular = glm.vec3(specular)
         
     def update(self):
         self.shader.use()
         
-        self.shader.setVec3("dirLight.direction", self.direction)
+        self.shader.set_vec3("dirLight.direction", self.direction)
         
-        self.shader.setVec3("dirLight.ambient", self.ambient)
-        self.shader.setVec3("dirLight.diffuse", self.diffuse)
-        self.shader.setVec3("dirLight.specular", self.specular)
+        self.shader.set_vec3("dirLight.ambient", self.ambient)
+        self.shader.set_vec3("dirLight.diffuse", self.diffuse)
+        self.shader.set_vec3("dirLight.specular", self.specular)
+
 
 import numpy as np
 class PointLight(Entity):
@@ -72,19 +73,19 @@ class PointLight(Entity):
     def __init__(self, shaders: list[Shader], color: list, position: list, index: int):
         super().__init__(ColoredCube(*color, shaders[0]), position, [0, 0, 0], 0.2)
         
-        self.color = np.array(color)
+        self.color = glm.vec3(*color)
         self.shader = shaders[1]
         self.index = index
         
     def update(self):
         self.shader.use()
 
-        self.shader.setVec3(f"pointLights[{self.index}].position", self.position)
+        self.shader.set_vec3(f"pointLights[{self.index}].position", self.position)
         
-        self.shader.setFloat(f"pointLights[{self.index}].constant", PointLight.CONSTANT)
-        self.shader.setFloat(f"pointLights[{self.index}].linear", PointLight.LINEAR)
-        self.shader.setFloat(f"pointLights[{self.index}].quadratic", PointLight.QUADRATIC)
+        self.shader.set_float(f"pointLights[{self.index}].constant", PointLight.CONSTANT)
+        self.shader.set_float(f"pointLights[{self.index}].linear", PointLight.LINEAR)
+        self.shader.set_float(f"pointLights[{self.index}].quadratic", PointLight.QUADRATIC)
         
-        self.shader.setVec3(f"pointLights[{self.index}].ambient", self.color * 0.15)
-        self.shader.setVec3(f"pointLights[{self.index}].diffuse", self.color)
-        self.shader.setVec3(f"pointLights[{self.index}].specular", self.color)
+        self.shader.set_vec3(f"pointLights[{self.index}].ambient", self.color * 0.15)
+        self.shader.set_vec3(f"pointLights[{self.index}].diffuse", self.color)
+        self.shader.set_vec3(f"pointLights[{self.index}].specular", self.color)

@@ -41,8 +41,8 @@ class Camera:
         
         for shader in shaders:
             shader.use()
-            shader.setMat4("projView", projView_matrix)
-            shader.setVec3("viewPos", self.position)
+            shader.set_mat4("projView", projView_matrix)
+            shader.set_vec3("viewPos", self.position)
         
 class FPS_Camera(Camera):
     

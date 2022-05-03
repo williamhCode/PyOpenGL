@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 
 from OpenGL.GL import *
-from OpenGL.GLU import *
 
 import numpy as np
 import glm
@@ -44,9 +43,9 @@ def main():
     # shaders
     shader = Shader("shaders/vertex.vert", "shaders/fragment.frag")
     shader.use()
-    shader.setInt("material.diffuse", 0)
-    shader.setInt("material.specular", 1)
-    shader.setFloat("material.shininess", 32.0)
+    shader.set_int("material.diffuse", 0)
+    shader.set_int("material.specular", 1)
+    shader.set_float("material.shininess", 32.0)
     
     shaderBasic = Shader("shaders/simple_3d_vertex.vert", "shaders/simple_3d_fragment.frag")
     
@@ -70,7 +69,7 @@ def main():
         PointLight([shaderBasic, shader], [0.0, 2.0, 0.0], [1.0, 1.0, -1.0], 1),
         PointLight([shaderBasic, shader], [0.0, 0.0, 2.0], [-1.0, 1.0, 1.0], 2),
     ]
-    
+
     static_entities: list[Entity] = []
     dynamic_entites: list[Entity] = [backpack]
     
@@ -150,8 +149,8 @@ def main():
             entity.update_transform()
 
         # drawing
-        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        post_processing.begin()
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # post_processing.begin()
 
         glDisable(GL_CULL_FACE)
         for point_light in point_lights:
@@ -164,7 +163,7 @@ def main():
         for entity in static_entities:
             entity.draw()
 
-        post_processing.end()
+        # post_processing.end()
 
         # flip screen
         pygame.display.flip()
