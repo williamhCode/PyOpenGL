@@ -1,6 +1,6 @@
 from OpenGL.GL import *
 from OpenGL.GL.shaders import compileProgram, compileShader
-import numpy as np
+import glm
 
 class Shader:
     
@@ -22,17 +22,25 @@ class Shader:
     def use(self):
         glUseProgram(self.ID)
         
-    def setInt(self, name, value):
+    def set_int(self, name, value):
         glUniform1i(glGetUniformLocation(self.ID, name), value)
         
-    def setFloat(self, name, value):
+    def set_float(self, name, value):
         glUniform1f(glGetUniformLocation(self.ID, name), value)
         
-    def setMat4(self, name, value):
-        glUniformMatrix4fv(glGetUniformLocation(self.ID, name), 1, GL_TRUE, np.array(value, dtype=np.float32))
+    def set_vec2(self, name, value):
+        glUniform2fv(glGetUniformLocation(self.ID, name), 1, glm.value_ptr(value))
         
-    def setVec3(self, name, value):
-        glUniform3fv(glGetUniformLocation(self.ID, name), 1, np.array(value, dtype=np.float32))
-
+    def set_vec3(self, name, value):
+        glUniform3fv(glGetUniformLocation(self.ID, name), 1, glm.value_ptr(value))
+        
+    def set_mat2(self, name, value):
+        glUniformMatrix2fv(glGetUniformLocation(self.ID, name), 1, GL_FALSE, glm.value_ptr(value))
+        
+    def set_mat3(self, name, value):
+        glUniformMatrix3fv(glGetUniformLocation(self.ID, name), 1, GL_FALSE, glm.value_ptr(value))
+        
+    def set_mat4(self, name, value):
+        glUniformMatrix4fv(glGetUniformLocation(self.ID, name), 1, GL_FALSE, glm.value_ptr(value))
 
         

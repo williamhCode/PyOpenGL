@@ -1,5 +1,5 @@
 from typing import Any
-from OpenGL.GL import *
+from OpenGL.GL import * 
 import numpy as np
 import glm
 
@@ -16,7 +16,7 @@ class Model():
     def draw(self, transform):
         self.shader.use()
         
-        self.shader.setMat4("model", transform)
+        self.shader.set_mat4("model", transform)
 
         glBindVertexArray(self.vao)
         glDrawArrays(GL_TRIANGLES, 0, self.vertex_count)
@@ -107,7 +107,7 @@ class OBJModel(TexturedModel):
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(12))
         # normal
         glEnableVertexAttribArray(2)
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(20))
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(20))
         
 
     def loadMesh(self, filename):
