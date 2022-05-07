@@ -3,7 +3,6 @@ from pygame.locals import *
 
 from OpenGL.GL import *
 
-import numpy as np
 import glm
 from timer import Timer
 
@@ -26,9 +25,9 @@ def main():
     )
 
     # create window
-    display = (1200, 800)
-    pygame.display.set_mode((display), DOUBLEBUF | OPENGL)
-    pygame.mouse.set_pos(display[0]/2, display[1]/2)
+    WIN_SIZE = (1200, 800)
+    pygame.display.set_mode((WIN_SIZE), DOUBLEBUF | OPENGL)
+    pygame.mouse.set_pos(WIN_SIZE[0]/2, WIN_SIZE[1]/2)
     pygame.mouse.set_visible(False)
     mouse_inside = False
     
@@ -52,7 +51,7 @@ def main():
     shader2d = Shader("shaders/screen_vertex.vert", "shaders/screen_fragment.frag")
     
     # post processing
-    post_processing = PostProcessing(display, shader2d)
+    post_processing = PostProcessing(WIN_SIZE, shader2d)
 
     # objects
     backpack_model = OBJModel("models/backpack.obj", Material("img/diffuse.jpg", "img/specular.jpg"), shader)
@@ -73,7 +72,7 @@ def main():
     static_entities: list[Entity] = []
     dynamic_entites: list[Entity] = [backpack]
     
-    camera = FPS_Camera([0.0, 0.0, 5.0], [0.0, 0.0, 0.0], glm.radians(45.0), display[0]/display[1], 0.3, 30.0)
+    camera = FPS_Camera([0.0, 0.0, 5.0], [0.0, 0.0, 0.0], glm.radians(45.0), WIN_SIZE[0]/WIN_SIZE[1], 0.3, 30.0)
     
     # game loop -------------------------------------------------- #
     clock = Timer()
@@ -149,8 +148,8 @@ def main():
             entity.update_transform()
 
         # drawing
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # post_processing.begin()
+        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        post_processing.begin()
 
         glDisable(GL_CULL_FACE)
         for point_light in point_lights:
@@ -163,7 +162,7 @@ def main():
         for entity in static_entities:
             entity.draw()
 
-        # post_processing.end()
+        post_processing.end()
 
         # flip screen
         pygame.display.flip()

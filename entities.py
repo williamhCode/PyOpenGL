@@ -64,7 +64,6 @@ class DirLight():
         self.shader.set_vec3("dirLight.specular", self.specular)
 
 
-import numpy as np
 class PointLight(Entity):
     CONSTANT = 1.0
     LINEAR = 0.00

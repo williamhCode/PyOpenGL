@@ -1,6 +1,5 @@
 from typing import Any
 from OpenGL.GL import * 
-import numpy as np
 import glm
 
 from shader import Shader
@@ -49,7 +48,7 @@ class Triangle:
             0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 0.75, 0.75,
             0.0,  0.5, 0.0, 0.0, 0.0, 1.0,  0.5, 0.25
         )
-        self.vertices = np.array(self.vertices, dtype=np.float32)
+        self.vertices = glm.array(glm.float32, *self.vertices)
 
         self.vertex_count = 3
 
@@ -59,8 +58,7 @@ class Triangle:
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
 
-        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes,
-                     self.vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices.ptr, GL_STATIC_DRAW)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(0))
@@ -81,7 +79,7 @@ class Triangle:
         glBindVertexArray(self.vao)
         glDrawArrays(GL_TRIANGLES, 0, self.vertex_count)
         
-        
+
 class OBJModel(TexturedModel):
     
     def __init__(self, filename, material: Material, shader: Shader):
@@ -89,7 +87,7 @@ class OBJModel(TexturedModel):
         self.shader = shader
         # x, y, z, s, t, nx, ny, nz
         self.vertices = self.loadMesh(filename)
-        self.vertices = np.array(self.vertices, dtype=np.float32)
+        self.vertices = glm.array(glm.float32, *self.vertices)
         self.vertex_count = len(self.vertices)//8
 
         self.vao = glGenVertexArrays(1)
@@ -97,8 +95,7 @@ class OBJModel(TexturedModel):
         
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
-        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes,
-                     self.vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices.ptr, GL_STATIC_DRAW)
         # position
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(0))
@@ -241,7 +238,7 @@ class TexturedCube(TexturedModel):
                 -0.5,  0.5,  0.5, 0, 0, 0, 1,  0,
                 -0.5,  0.5, -0.5, 0, 1, 0, 1,  0
             )
-        self.vertices = np.array(self.vertices, dtype=np.float32)
+        self.vertices = glm.array(glm.float32, *self.vertices)
         self.vertex_count = len(self.vertices)//8
 
         self.vao = glGenVertexArrays(1)
@@ -249,7 +246,7 @@ class TexturedCube(TexturedModel):
         
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
-        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices.ptr, GL_STATIC_DRAW)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(0))
@@ -315,13 +312,13 @@ class ColoredCube(Model):
                 -0.5,  0.5, -0.5, r, g, b
             )
         self.vertex_count = len(self.vertices)//6
-        self.vertices = np.array(self.vertices, dtype=np.float32)
+        self.vertices = glm.array(glm.float32, *self.vertices)
 
         self.vao = glGenVertexArrays(1)
         glBindVertexArray(self.vao)
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
-        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices.ptr, GL_STATIC_DRAW)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, ctypes.c_void_p(0))
@@ -344,13 +341,13 @@ class TexturedQuad:
             x + w/2, y - h/2, 1, 0,
             x + w/2, y + h/2, 1, 1
         )
-        self.vertices = np.array(self.vertices, dtype=np.float32)
+        self.vertices = glm.array(glm.float32, *self.vertices)
         
         self.vao = glGenVertexArrays(1)
         glBindVertexArray(self.vao)
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
-        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices.ptr, GL_STATIC_DRAW)
 
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 16, ctypes.c_void_p(0))

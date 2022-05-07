@@ -1,5 +1,4 @@
 from OpenGL.GL import *
-import numpy as np
 import glm
 
 from shader import Shader
