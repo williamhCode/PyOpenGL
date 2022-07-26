@@ -4,14 +4,16 @@ import glm
 from models import Model, ColoredCube, TexturedModel
 from shader import Shader
 
+from typing import Sequence
+
 class Entity:
     
-    def __init__(self, model: Model | TexturedModel, position: list, orientation: list, scale: float):
+    def __init__(self, model: Model | TexturedModel, position: Sequence, orientation: Sequence, scale: float):
         """
         Args:
             model (Model): the assiciated model
-            position (list): x, y, z position
-            orientation (list): pitch, yaw, roll
+            position (Sequence): x, y, z position
+            orientation (Sequence): pitch, yaw, roll
             scale (float): float
         """
         self.model = model
@@ -47,7 +49,7 @@ class Entity:
 
 
 class DirLight():
-    def __init__(self, shader: Shader, direction: list, ambient: list, diffuse: list, specular: list):
+    def __init__(self, shader: Shader, direction: Sequence, ambient: Sequence, diffuse: Sequence, specular: Sequence):
         self.shader = shader
         self.direction = glm.vec3(*direction)
         self.ambient = glm.vec3(ambient)
@@ -62,14 +64,21 @@ class DirLight():
         self.shader.set_vec3("dirLight.ambient", self.ambient)
         self.shader.set_vec3("dirLight.diffuse", self.diffuse)
         self.shader.set_vec3("dirLight.specular", self.specular)
-
+        
 
 class PointLight(Entity):
     CONSTANT = 1.0
     LINEAR = 0.00
     QUADRATIC = 0.00
     
-    def __init__(self, shaders: list[Shader], color: list, position: list, index: int):
+    def __init__(self, shaders: Sequence[Shader], color: Sequence, position: Sequence, index: int):
+        """
+        Args:
+            shaders (Sequence[Shader]): cube shader and point light shader
+            color (Sequence): r, g, b color (0.0 - 1.0)
+            position (Sequence): x, y, z position
+            index (int): index of point light
+        """
         super().__init__(ColoredCube(*color, shaders[0]), position, [0, 0, 0], 0.2)
         
         self.color = glm.vec3(*color)
@@ -85,6 +94,6 @@ class PointLight(Entity):
         self.shader.set_float(f"pointLights[{self.index}].linear", PointLight.LINEAR)
         self.shader.set_float(f"pointLights[{self.index}].quadratic", PointLight.QUADRATIC)
         
-        self.shader.set_vec3(f"pointLights[{self.index}].ambient", self.color * 0.15)
+        self.shader.set_vec3(f"pointLights[{self.index}].ambient", self.color * 0.0)
         self.shader.set_vec3(f"pointLights[{self.index}].diffuse", self.color)
         self.shader.set_vec3(f"pointLights[{self.index}].specular", self.color)

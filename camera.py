@@ -3,12 +3,14 @@ import glm
 
 from shader import Shader
 
+from typing import Sequence
+
 class Camera:
     # camera faces in the direction of the negative z-axis
     forward = glm.vec3(0.0, 0.0, -1.0)
     up = glm.vec3(0.0, 1.0, 0.0)
     
-    def __init__(self, position: list, orientation: list, fov, aspect_ratio, near, far):
+    def __init__(self, position: Sequence, orientation: Sequence, fov, aspect_ratio, near, far):
         self.position = glm.vec3(*position)
         # orientation is a list of euler angles (yaw, pitch, roll)
         self.orientation = glm.vec3(*orientation)
@@ -23,8 +25,8 @@ class Camera:
         self.position.x += x
         self.position.y += y
         self.position.z += z
-        
-    def update(self, shaders: list[Shader]):
+
+    def update(self, shaders: Sequence[Shader]):
         pitch = glm.rotate(glm.radians(self.orientation.x), glm.vec3(1, 0, 0))
         yaw = glm.rotate(glm.radians(self.orientation.y), glm.vec3(0, 1, 0))
         roll = glm.rotate(glm.radians(self.orientation.z), glm.vec3(0, 0, 1))

@@ -316,6 +316,7 @@ class ColoredCube(Model):
 
         self.vao = glGenVertexArrays(1)
         glBindVertexArray(self.vao)
+
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
         glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices.ptr, GL_STATIC_DRAW)

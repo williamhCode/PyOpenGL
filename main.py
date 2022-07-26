@@ -28,15 +28,15 @@ def main():
     WIN_SIZE = (1200, 800)
     pygame.display.set_mode((WIN_SIZE), DOUBLEBUF | OPENGL)
     pygame.mouse.set_pos(WIN_SIZE[0]/2, WIN_SIZE[1]/2)
-    pygame.mouse.set_visible(False)
+    # pygame.mouse.set_visible(False)
     mouse_inside = False
     
     # initialize opengl
     glClearColor(0.0, 0.0, 0.0, 1)
     glEnable(GL_DEPTH_TEST)
     
-    glCullFace(GL_BACK)
-    glFrontFace(GL_CCW)
+    # glCullFace(GL_BACK)
+    # glFrontFace(GL_CCW)
     
     # initialize game objects -------------------------------------------------- #
     # shaders
@@ -55,18 +55,18 @@ def main():
 
     # objects
     backpack_model = OBJModel("models/backpack.obj", Material("img/diffuse.jpg", "img/specular.jpg"), shader)
-    backpack = Entity(backpack_model, [0, 0, 0], [0, 0, 0], 0.5)
+    backpack = Entity(backpack_model, (0, 0, 0), (0, 0, 0), 0.5)
     
     textured_cube_model = TexturedCube(Material("img/crate_diffuse.jpg", "img/crate_specular.jpg"), shader)
-    cube = Entity(textured_cube_model, [0, 0, 0], [0, 0, 0], 1)
+    cube = Entity(textured_cube_model, (0, 0, 0), (0, 0, 0), 1)
     
     # lights
-    dir_light = DirLight(shader, [0.5, -1, -0.5], [0.2, 0.2, 0.2], [1.0, 1.0, 1.0], [1.0, 1.0, 1.0])
+    dir_light = DirLight(shader, (0.5, -1, -0.5), (0.2, 0.2, 0.2), (1.0, 1.0, 1.0), (1.0, 1.0, 1.0))
     
     point_lights = [
-        PointLight([shaderBasic, shader], [2.0, 0.0, 0.0], [1.0, 1.0, 1.0], 0),
-        PointLight([shaderBasic, shader], [0.0, 2.0, 0.0], [1.0, 1.0, -1.0], 1),
-        PointLight([shaderBasic, shader], [0.0, 0.0, 2.0], [-1.0, 1.0, 1.0], 2),
+        PointLight((shaderBasic, shader), (1.0, 0.0, 0.0), (1.0, 1.0, 1.0), 0),
+        PointLight((shaderBasic, shader), (0.0, 1.0, 0.0), (1.0, 1.0, -1.0), 1),
+        PointLight((shaderBasic, shader), (0.0, 0.0, 1.0), (-1.0, 1.0, 1.0), 2),
     ]
 
     static_entities: list[Entity] = []
@@ -94,20 +94,22 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
+        X_CENTER = WIN_SIZE[0]/2
+        Y_CENTER = WIN_SIZE[1]/2
         # mouse movement
         if mouse_inside == False:
             if pygame.mouse.get_focused():
-                pygame.mouse.set_pos((400, 300))
+                pygame.mouse.set_pos((X_CENTER, Y_CENTER))
                 mouse_inside = True
         else:
             x, y = pygame.mouse.get_pos()
 
-            yaw_increment = 0.1 * (400 - x)
-            pitch_increment = 0.1 * (300 - y)
+            yaw_increment = 0.1 * (X_CENTER - x)
+            pitch_increment = 0.1 * (Y_CENTER - y)
 
             camera.rotate(yaw_increment, pitch_increment)
 
-            pygame.mouse.set_pos((400, 300))
+            pygame.mouse.set_pos((X_CENTER, Y_CENTER))
 
         # key press
         forwards = 0.0
@@ -136,7 +138,7 @@ def main():
         
         dir_light.update()
         
-        backpack.orientation.y += 50 * dt
+        # backpack.orientation.y += 50 * dt
         
         for point_light in point_lights:
             point_light.update()
@@ -148,8 +150,8 @@ def main():
             entity.update_transform()
 
         # drawing
-        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        post_processing.begin()
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # post_processing.begin()
 
         glDisable(GL_CULL_FACE)
         for point_light in point_lights:
@@ -162,7 +164,7 @@ def main():
         for entity in static_entities:
             entity.draw()
 
-        post_processing.end()
+        # post_processing.end()
 
         # flip screen
         pygame.display.flip()
